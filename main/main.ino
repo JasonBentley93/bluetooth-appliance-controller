@@ -108,39 +108,27 @@ void loop() {
   delay(5);
 }
 
-/*returns the value of  power (HIGH or LOW)
- *allows for push-button swtich operation*/
-int switchStateHelper(){
-  switchState = digitalRead(onOff);
-  
-  if (switchState != prevSwitchState){
-    if (switchState == HIGH){
-      power = !power;
-    }    
-  }
-  prevSwitchState = switchState;
-  return power;
-}
+/****************************************
+ *** H E L P E R    F U N C T I O N S ***
+ ****************************************/
+/*helper function for non-stop 
+ *flashing feature. Loops until
+ *passed the "relayPin --> LOW"
+ *command from BTserial*/
+void flashHelper(){
 
-/*logic to switch power on/off 
- *to the HC-05 module*/
-void switchStatus(int status){
-  if (status == HIGH){
-    digitalWrite(powerPin, status);
-  }else {
-    digitalWrite(powerPin, status);
-  }
-}
+  while(BTserial.read() != '0'){
+    unsigned long timeSincePress  = millis() - buttonPress;
+    
+    if((timeSincePress >= 489) && (timeSincePress <= 514)){
+      digitalWrite(relayPin, HIGH);   
 
-/*writes intro sequence to LCD*/
-void lcdIntroSequence(){
-  lcd.print("Hello!");
-  delay(3000);
-  
-  lcd.clear();
-  lcd.print("Arduino ready...");
-  lcd.setCursor(0, 1);
-  lcd.print("BT module is off");
+    }else if (timeSincePress >= 1000){
+      digitalWrite(relayPin, LOW);
+      buttonPress = millis();
+    }
+  }
+  digitalWrite(relayPin, LOW);
 }
 
 /*finds, and writes, connection and 
@@ -168,20 +156,15 @@ void lcdBTConnectionStatus(int status){
   }
 }
 
-/*Writes confrimation message of 
- *successful connection onto the 
- *BTserial port*/ 
-void stateCommunicator(){
-  int status = digitalRead(state);
+/*writes intro sequence to LCD*/
+void lcdIntroSequence(){
+  lcd.print("Hello!");
+  delay(3000);
   
-  if (status == HIGH){
-    if (stateCommunicatorCounter > 0){
-      BTserial.println("Connected to Arduino!");
-      stateCommunicatorCounter = 0;
-    }
-  }else{
-    stateCommunicatorCounter = stateCommunicatorCounter + 1;
-  }
+  lcd.clear();
+  lcd.print("Arduino ready...");
+  lcd.setCursor(0, 1);
+  lcd.print("BT module is off");
 }
 
 /*Logic for controlling relay, reads
@@ -218,25 +201,42 @@ void onOffBTSerialReader(){
   }
 }
 
-/*helper function for non-stop 
- *flashing feature-loops until
- *passed the "realyPin --> LOW"
- *command from BTserial*/
-void flashHelper(){
-
-  while(BTserial.read() != '0'){
-    unsigned long timeSincePress  = millis() - buttonPress;
-    
-    if((timeSincePress >= 489) && (timeSincePress <= 514)){
-      digitalWrite(relayPin, HIGH);   
-
-    }else if (timeSincePress >= 1000){
-      digitalWrite(relayPin, LOW);
-      buttonPress = millis();
+/*Writes confrimation message of 
+ *successful connection onto the 
+ *BTserial port*/ 
+void stateCommunicator(){
+  int status = digitalRead(state);
+  
+  if (status == HIGH){
+    if (stateCommunicatorCounter > 0){
+      BTserial.println("Connected to Arduino!");
+      stateCommunicatorCounter = 0;
     }
+  }else{
+    stateCommunicatorCounter = stateCommunicatorCounter + 1;
   }
-  digitalWrite(relayPin, LOW);
 }
 
+/*returns the value of  power (HIGH or LOW)
+ *allows for push-button swtich operation*/
+int switchStateHelper(){
+  switchState = digitalRead(onOff);
+  
+  if (switchState != prevSwitchState){
+    if (switchState == HIGH){
+      power = !power;
+    }    
+  }
+  prevSwitchState = switchState;
+  return power;
+}
 
-
+/*logic to switch power on/off 
+ *to the HC-05 module*/
+void switchStatus(int status){
+  if (status == HIGH){
+    digitalWrite(powerPin, status);
+  }else {
+    digitalWrite(powerPin, status);
+  }
+}

@@ -6,7 +6,7 @@
 /**DATE:   12/31/2021**/
 
 /***************************************************************************
- *** The firmware allows for two-way communication between a a bluetooth ***
+ *** The firmware allows for two-way communication between a bluetooth   ***
  *** device and the arduino for the purpose of operating a relay         ***
  *** and controling a smartplug                                          ***
  ***************************************************************************/

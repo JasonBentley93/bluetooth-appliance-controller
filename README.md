@@ -12,7 +12,7 @@ To build a functioning bluetooth appliance controller.
  - Alcatel Ovation 32gb Black U705AC (Cricket) Android Smartphone RG7283 
  - JHD659M10 LCD display (16x2)
  - Extension Cord
- - Bluetooth Controller (google play: https://play.google.com/store/apps/details?id=com.mightyit.gops.bluetoothcontroller&hl=en_US&gl=US )
+ - Bluetooth Controller app for android (google play: https://play.google.com/store/apps/details?id=com.mightyit.gops.bluetoothcontroller&hl=en_US&gl=US )
  
  # Build Updates are Posted to Twitter
  https://twitter.com/JasonBe01306124/status/1477328499572559872

@@ -17,7 +17,6 @@
 SoftwareSerial BTserial(9, 10); //(Rx, Tx) on arduino
 LiquidCrystal  lcd(4, 13, 12, 11, 6, 5);
 
-
 bool BTconnection = false; 
 
 const int txBT       = 9;
@@ -36,9 +35,8 @@ unsigned long buttonPress = 0;
 
 char btData = ' ';
 
-
 void setup() {
-  lcdBootSequence();
+  lcd.begin(16,2);
 
   pinMode(txBT,  INPUT);
   pinMode(onOff, INPUT);
@@ -49,8 +47,7 @@ void setup() {
   pinMode(relayPin, OUTPUT);
   
   Serial.begin(9600);
-  delay(6000);
-  
+ 
   lcdIntroSequence();
 
   Serial.println("");
@@ -72,7 +69,7 @@ void setup() {
 
   while(BTconnection == false){
     Serial.println("connecting...");  
-    delay(3000);
+    delay(3000); //gives user time to read LCD messages
     
     if (digitalRead(state) == HIGH){
       BTconnection = true;
@@ -90,13 +87,11 @@ void setup() {
   delay(10);
   BTserial.println("Connected to Arduino!");
  
-  delay(3000);
+  delay(3000); //gives user time to read LCD messages
 }
 
-
 void loop() {
-
-  //delays in loop() help to alleviate bugs in lcd communication
+  //delays help to alleviate bugs in LCD communication
   int status = switchStateHelper();
   delay(5);
 
@@ -104,23 +99,20 @@ void loop() {
   delay(5);
 
   lcdBTConnectionStatus(status);
-  delay(75);
-  
+  delay(75);   //lcd write speed is slower than arduino clock
+               //allows enought time for LCD to display message
   stateCommunicator();
   delay(5);
 
   onOffBTSerialReader();
   delay(5);
-  
-
 }
 
-/*returns the state of the switch
- *switchState() == HIGH --> HC-05 module has power
- *switchState() == LOW  -->  HC-05 module has no power*/
+/*returns the value of  power (HIGH or LOW)
+ *allows for push-button swtich operation*/
 int switchStateHelper(){
   switchState = digitalRead(onOff);
-
+  
   if (switchState != prevSwitchState){
     if (switchState == HIGH){
       power = !power;
@@ -137,28 +129,11 @@ void switchStatus(int status){
     digitalWrite(powerPin, status);
   }else {
     digitalWrite(powerPin, status);
-  
   }
-}
-
-/*writes bootsequence to the LCD*/
-void lcdBootSequence(){
-   delay(100);
-  lcd.begin(16, 2);
-  lcd.print("Setting Up!");
-  lcd.setCursor(0, 1);
-  lcd.print("please wait...");
 }
 
 /*writes intro sequence to LCD*/
 void lcdIntroSequence(){
-  lcd.clear();
- 
-  lcd.print("Setup complete!");
-  delay(2000);
-  
-  lcd.clear();
-  
   lcd.print("Hello!");
   delay(3000);
   
@@ -209,7 +184,15 @@ void stateCommunicator(){
   }
 }
 
-/*Logic for controlling relay*/
+/*Logic for controlling relay, reads
+ *BTserial. 4 availble functions:
+ *  CODE  ||      FUNCTION
+ *===============================
+ *   '0'  |  relayPin --> LOW
+ *   '1'  |  relayPin --> HIGH
+ *   '2'  |  flash 3 times
+ *           (.5 second delay)
+ *   '3'  |  call flashHelper() */
 void onOffBTSerialReader(){
   
   while(BTserial.available()){
@@ -221,8 +204,6 @@ void onOffBTSerialReader(){
     }else if (btData == '0'){
       digitalWrite(relayPin, LOW);
       
-
-
     }else if (btData == '2'){
       for (int i = 0; i < 3; i++){
         digitalWrite(relayPin, HIGH);
@@ -238,11 +219,12 @@ void onOffBTSerialReader(){
 }
 
 /*helper function for non-stop 
- *flashing feature*/
+ *flashing feature-loops until
+ *passed the "realyPin --> LOW"
+ *command from BTserial*/
 void flashHelper(){
 
   while(BTserial.read() != '0'){
-
     unsigned long timeSincePress  = millis() - buttonPress;
     
     if((timeSincePress >= 489) && (timeSincePress <= 514)){

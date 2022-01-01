@@ -100,7 +100,7 @@ void loop() {
 
   lcdBTConnectionStatus(status);
   delay(75);   //lcd write speed is slower than arduino clock
-               //allows enought time for LCD to display message
+               //allows enough time for LCD to display message
   stateCommunicator();
   delay(5);
 

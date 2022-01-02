@@ -8,7 +8,7 @@ An arduino powered smart plug with a LCD read out which allows you to control a 
 To build a functioning bluetooth smart plug.
 
  =========== S U P P L I E S ===========
- - Arduino Uno
+ - Arduino Uno R3
  - HC-05 Bluetooth Module
  - HW-316 LANDZO 4 Channel Relay Module Expansion Board
  - Alcatel Ovation 32gb Black U705AC (Cricket) Android Smartphone RG7283 

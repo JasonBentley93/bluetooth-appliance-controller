@@ -1,9 +1,11 @@
-# bluetooth-appliance-controller
+# Bluetooth Smart Plug
 built with the arduino IDE
+
+An arduino powered smart plug with a LCD read out which allows you to control a relay via bluetooth serial communication
 
  =========== P U R P O S E ===========
 
-To build a functioning bluetooth appliance controller.
+To build a functioning bluetooth smart plug.
 
  =========== S U P P L I E S ===========
  - Arduino Uno

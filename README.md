@@ -10,7 +10,7 @@ To build a functioning bluetooth smart plug.
  =========== S U P P L I E S ===========
  - Arduino Uno
  - HC-05 Bluetooth Module
- - LANDZO 4 Channel Relay Module Expansion Board
+ - HW-316 LANDZO 4 Channel Relay Module Expansion Board
  - Alcatel Ovation 32gb Black U705AC (Cricket) Android Smartphone RG7283 
  - JHD659M10 LCD display (16x2)
  - Extension Cord
